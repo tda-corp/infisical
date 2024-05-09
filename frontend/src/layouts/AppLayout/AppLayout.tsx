@@ -8,22 +8,14 @@
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { faGithub, faSlack } from "@fortawesome/free-brands-svg-icons";
 import {
   faAngleDown,
   faArrowLeft,
-  faArrowUpRightFromSquare,
-  faBook,
   faCheck,
-  faEnvelope,
-  faInfinity,
-  faInfo,
   faMobile,
-  faPlus,
-  faQuestion
+  faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -65,11 +57,8 @@ import {
   useAddUserToWsNonE2EE,
   useCreateWorkspace,
   useGetAccessRequestsCount,
-  useGetOrgTrialUrl,
   useGetSecretApprovalRequestCount,
-  useGetUserAction,
   useLogoutUser,
-  useRegisterUserAction,
   useSelectOrganization
 } from "@app/hooks/api";
 import { navigateUserToOrg } from "@app/views/Login/Login.utils";
@@ -78,29 +67,6 @@ import { CreateOrgModal } from "@app/views/Org/components";
 interface LayoutProps {
   children: React.ReactNode;
 }
-
-const supportOptions = [
-  [
-    <FontAwesomeIcon key={1} className="pr-4 text-sm" icon={faSlack} />,
-    "Support Forum",
-    "https://infisical.com/slack"
-  ],
-  [
-    <FontAwesomeIcon key={2} className="pr-4 text-sm" icon={faBook} />,
-    "Read Docs",
-    "https://infisical.com/docs/documentation/getting-started/introduction"
-  ],
-  [
-    <FontAwesomeIcon key={3} className="pr-4 text-sm" icon={faGithub} />,
-    "GitHub Issues",
-    "https://github.com/Infisical/infisical/issues"
-  ],
-  [
-    <FontAwesomeIcon key={4} className="pr-4 text-sm" icon={faEnvelope} />,
-    "Email Support",
-    "mailto:support@infisical.com"
-  ]
-];
 
 const formSchema = yup.object({
   name: yup
@@ -117,8 +83,6 @@ type TAddProjectFormData = yup.InferType<typeof formSchema>;
 export const AppLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
 
-  const { mutateAsync } = useGetOrgTrialUrl();
-
   const { workspaces, currentWorkspace } = useWorkspace();
   const { orgs, currentOrg } = useOrganization();
 
@@ -126,7 +90,6 @@ export const AppLayout = ({ children }: LayoutProps) => {
   const { subscription } = useSubscription();
   const workspaceId = currentWorkspace?.id || "";
   const projectSlug = currentWorkspace?.slug || "";
-  const { data: updateClosed } = useGetUserAction("december_update_closed");
 
   const { data: secretApprovalReqCount } = useGetSecretApprovalRequestCount({ workspaceId });
   const { data: accessApprovalRequestCount } = useGetAccessRequestsCount({ projectSlug });
@@ -141,8 +104,6 @@ export const AppLayout = ({ children }: LayoutProps) => {
 
   const createWs = useCreateWorkspace();
   const addUsersToProject = useAddUserToWsNonE2EE();
-
-  const infisicalPlatformVersion = process.env.NEXT_PUBLIC_INFISICAL_PLATFORM_VERSION;
 
   const { popUp, handlePopUpOpen, handlePopUpClose, handlePopUpToggle } = usePopUp([
     "addNewWs",
@@ -160,12 +121,7 @@ export const AppLayout = ({ children }: LayoutProps) => {
 
   const { t } = useTranslation();
 
-  const registerUserAction = useRegisterUserAction();
   const { mutateAsync: selectOrganization } = useSelectOrganization();
-
-  const closeUpdate = async () => {
-    await registerUserAction.mutateAsync("december_update_closed");
-  };
 
   const logout = useLogoutUser();
   const logOutUser = async () => {

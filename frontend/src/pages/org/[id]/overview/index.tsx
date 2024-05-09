@@ -6,28 +6,15 @@ import { useTranslation } from "react-i18next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faSlack } from "@fortawesome/free-brands-svg-icons";
 import { faFolderOpen } from "@fortawesome/free-regular-svg-icons";
 import {
   faArrowRight,
-  faArrowUpRightFromSquare,
-  faCheck,
-  faCheckCircle,
-  faClipboard,
   faExclamationCircle,
-  faHandPeace,
   faMagnifyingGlass,
-  faNetworkWired,
-  faPlug,
-  faPlus,
-  faUserPlus,
-  faWarning,
-  faXmark
+  faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Tabs from "@radix-ui/react-tabs";
 import * as yup from "yup";
 
 import { createNotification } from "@app/components/notifications";
@@ -55,406 +42,11 @@ import { withPermission } from "@app/hoc";
 import {
   fetchOrgUsers,
   useAddUserToWsNonE2EE,
-  useCreateWorkspace,
-  useGetUserAction,
-  useRegisterUserAction
+  useCreateWorkspace
 } from "@app/hooks/api";
 // import { fetchUserWsKey } from "@app/hooks/api/keys/queries";
 import { useFetchServerStatus } from "@app/hooks/api/serverDetails";
 import { usePopUp } from "@app/hooks/usePopUp";
-
-const features = [
-  {
-    id: 0,
-    name: "Kubernetes Operator",
-    link: "https://infisical.com/docs/documentation/getting-started/kubernetes",
-    description:
-      "Pull secrets into your Kubernetes containers and automatically redeploy upon secret changes."
-  },
-  {
-    _id: 1,
-    name: "Infisical Agent",
-    link: "https://infisical.com/docs/infisical-agent/overview",
-    description: "Inject secrets into your apps without modifying any application logic."
-  }
-];
-
-type ItemProps = {
-  text: string;
-  subText: string;
-  complete: boolean;
-  icon: IconProp;
-  time: string;
-  userAction?: string;
-  link?: string;
-};
-
-function copyToClipboard(id: string, setState: (value: boolean) => void) {
-  // Get the text field
-  const copyText = document.getElementById(id) as HTMLInputElement;
-
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
-
-  setState(true);
-  setTimeout(() => setState(false), 2000);
-  // Alert the copied text
-  // alert("Copied the text: " + copyText.value);
-}
-
-const CodeItem = ({
-  isCopied,
-  setIsCopied,
-  textExplanation,
-  code,
-  id
-}: {
-  isCopied: boolean;
-  setIsCopied: (value: boolean) => void;
-  textExplanation: string;
-  code: string;
-  id: string;
-}) => {
-  return (
-    <>
-      <p className="mb-2 mt-4 text-sm leading-normal text-bunker-300">{textExplanation}</p>
-      <div className="flex flex-row items-center justify-between rounded-md border border-mineshaft-600 bg-bunker px-3 py-2 font-mono text-sm">
-        <input disabled value={code} id={id} className="w-full bg-transparent text-bunker-200" />
-        <button
-          type="button"
-          onClick={() => copyToClipboard(id, setIsCopied)}
-          className="h-full pl-3.5 pr-2 text-bunker-300 duration-200 hover:text-primary-200"
-        >
-          {isCopied ? (
-            <FontAwesomeIcon icon={faCheck} className="pr-0.5" />
-          ) : (
-            <FontAwesomeIcon icon={faClipboard} />
-          )}
-        </button>
-      </div>
-    </>
-  );
-};
-
-const TabsObject = () => {
-  const [downloadCodeCopied, setDownloadCodeCopied] = useState(false);
-  const [downloadCode2Copied, setDownloadCode2Copied] = useState(false);
-  const [loginCodeCopied, setLoginCodeCopied] = useState(false);
-  const [initCodeCopied, setInitCodeCopied] = useState(false);
-  const [runCodeCopied, setRunCodeCopied] = useState(false);
-
-  return (
-    <Tabs.Root
-      className="flex w-full cursor-default flex-col rounded-md border border-mineshaft-600"
-      defaultValue="tab1"
-    >
-      <Tabs.List
-        className="flex shrink-0 border-b border-mineshaft-600"
-        aria-label="Manage your account"
-      >
-        <Tabs.Trigger
-          className="flex h-10 flex-1 cursor-default select-none items-center justify-center bg-bunker-700 px-5 text-sm leading-none text-bunker-300 outline-none first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b data-[state=active]:border-primary data-[state=active]:font-medium data-[state=active]:text-primary data-[state=active]:focus:relative"
-          value="tab1"
-        >
-          MacOS
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          className="flex h-10 flex-1 cursor-default select-none items-center justify-center bg-bunker-700 px-5 text-sm leading-none text-bunker-300 outline-none first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b data-[state=active]:border-primary data-[state=active]:font-medium data-[state=active]:text-primary data-[state=active]:focus:relative"
-          value="tab2"
-        >
-          Windows
-        </Tabs.Trigger>
-        {/* <Tabs.Trigger
-        className="bg-bunker-700 px-5 h-10 flex-1 flex items-center justify-center text-sm leading-none text-bunker-300 select-none first:rounded-tl-md last:rounded-tr-md data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:focus:relative data-[state=active]:border-b data-[state=active]:border-primary outline-none cursor-default"
-        value="tab3"
-      >
-        Arch Linux
-      </Tabs.Trigger> */}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-10 flex-1 cursor-default select-none items-center justify-center bg-bunker-700 px-5 text-sm leading-none text-bunker-300 outline-none duration-200 first:rounded-tl-md last:rounded-tr-md hover:text-bunker-100 data-[state=active]:border-b data-[state=active]:border-primary data-[state=active]:font-medium data-[state=active]:text-primary data-[state=active]:focus:relative"
-          href="https://infisical.com/docs/cli/overview"
-        >
-          Other Platforms <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="ml-2" />
-        </a>
-      </Tabs.List>
-      <Tabs.Content
-        className="grow cursor-default rounded-b-md bg-bunker-700 p-5 pt-0 outline-none"
-        value="tab1"
-      >
-        <CodeItem
-          isCopied={downloadCodeCopied}
-          setIsCopied={setDownloadCodeCopied}
-          textExplanation="1. Download CLI"
-          code="brew install infisical/get-cli/infisical"
-          id="downloadCode"
-        />
-        <CodeItem
-          isCopied={loginCodeCopied}
-          setIsCopied={setLoginCodeCopied}
-          textExplanation="2. Login"
-          code="infisical login"
-          id="loginCode"
-        />
-        <CodeItem
-          isCopied={initCodeCopied}
-          setIsCopied={setInitCodeCopied}
-          textExplanation="3. Choose Project"
-          code="infisical init"
-          id="initCode"
-        />
-        <CodeItem
-          isCopied={runCodeCopied}
-          setIsCopied={setRunCodeCopied}
-          textExplanation="4. Done! Now, you can prepend your usual start script with:"
-          code="infisical run -- [YOUR USUAL CODE START SCRIPT GOES HERE]"
-          id="runCode"
-        />
-        <p className="mt-2 text-sm text-bunker-300">
-          You can find example of start commands for different frameworks{" "}
-          <a
-            className="text-primary underline underline-offset-2"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://infisical.com/docs/integrations/overview"
-          >
-            here
-          </a>
-          .{" "}
-        </p>
-      </Tabs.Content>
-      <Tabs.Content className="grow rounded-b-md bg-bunker-700 p-5 pt-0 outline-none" value="tab2">
-        <CodeItem
-          isCopied={downloadCodeCopied}
-          setIsCopied={setDownloadCodeCopied}
-          textExplanation="1. Download CLI"
-          code="scoop bucket add org https://github.com/Infisical/scoop-infisical.git"
-          id="downloadCodeW"
-        />
-        <div className="mt-2 flex flex-row items-center justify-between rounded-md border border-mineshaft-600 bg-bunker px-3 py-2 font-mono text-sm">
-          <input
-            disabled
-            value="scoop install infisical"
-            id="downloadCodeW2"
-            className="w-full bg-transparent text-bunker-200"
-          />
-          <button
-            type="button"
-            onClick={() => copyToClipboard("downloadCodeW2", setDownloadCode2Copied)}
-            className="h-full pl-3.5 pr-2 text-bunker-300 duration-200 hover:text-primary-200"
-          >
-            {downloadCode2Copied ? (
-              <FontAwesomeIcon icon={faCheck} className="pr-0.5" />
-            ) : (
-              <FontAwesomeIcon icon={faClipboard} />
-            )}
-          </button>
-        </div>
-        <CodeItem
-          isCopied={loginCodeCopied}
-          setIsCopied={setLoginCodeCopied}
-          textExplanation="2. Login"
-          code="infisical login"
-          id="loginCodeW"
-        />
-        <CodeItem
-          isCopied={initCodeCopied}
-          setIsCopied={setInitCodeCopied}
-          textExplanation="3. Choose Project"
-          code="infisical init"
-          id="initCodeW"
-        />
-        <CodeItem
-          isCopied={runCodeCopied}
-          setIsCopied={setRunCodeCopied}
-          textExplanation="4. Done! Now, you can prepend your usual start script with:"
-          code="infisical run -- [YOUR USUAL CODE START SCRIPT GOES HERE]"
-          id="runCodeW"
-        />
-        <p className="mt-2 text-sm text-bunker-300">
-          You can find example of start commands for different frameworks{" "}
-          <a
-            className="text-primary underline underline-offset-2"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://infisical.com/docs/integrations/overview"
-          >
-            here
-          </a>
-          .{" "}
-        </p>
-      </Tabs.Content>
-    </Tabs.Root>
-  );
-};
-
-const LearningItem = ({
-  text,
-  subText,
-  complete,
-  icon,
-  time,
-  userAction,
-  link
-}: ItemProps): JSX.Element => {
-  const registerUserAction = useRegisterUserAction();
-  if (link) {
-    return (
-      <a
-        target={`${link.includes("https") ? "_blank" : "_self"}`}
-        rel="noopener noreferrer"
-        className={`w-full ${complete && "opacity-30 duration-200 hover:opacity-100"}`}
-        href={link}
-      >
-        <div
-          className={`${
-            complete ? "bg-gradient-to-r from-primary-500/70 p-[0.07rem]" : ""
-          } mb-3 rounded-md`}
-        >
-          <div
-            onKeyDown={() => null}
-            role="button"
-            tabIndex={0}
-            onClick={async () => {
-              if (userAction && userAction !== "first_time_secrets_pushed") {
-                await registerUserAction.mutateAsync(userAction);
-              }
-            }}
-            className={`group relative flex h-[5.5rem] w-full items-center justify-between overflow-hidden rounded-md border ${
-              complete
-                ? "cursor-default border-mineshaft-900 bg-gradient-to-r from-[#0e1f01] to-mineshaft-700"
-                : "cursor-pointer border-mineshaft-600 bg-mineshaft-800 shadow-xl hover:bg-mineshaft-700"
-            } text-mineshaft-100 duration-200`}
-          >
-            <div className="mr-4 flex flex-row items-center">
-              <FontAwesomeIcon icon={icon} className="mx-2 w-16 text-4xl" />
-              {complete && (
-                <div className="absolute left-12 top-10 flex h-7 w-7 items-center justify-center rounded-full bg-bunker-500 p-2 group-hover:bg-mineshaft-700">
-                  <FontAwesomeIcon icon={faCheckCircle} className="h-5 w-5 text-4xl text-primary" />
-                </div>
-              )}
-              <div className="flex flex-col items-start">
-                <div className="mt-0.5 text-xl font-semibold">{text}</div>
-                <div className="text-sm font-normal">{subText}</div>
-              </div>
-            </div>
-            <div
-              className={`w-32 pr-8 text-right text-sm font-semibold ${complete && "text-primary"}`}
-            >
-              {complete ? "Complete!" : `About ${time}`}
-            </div>
-            {/* {complete && <div className="absolute bottom-0 left-0 h-1 w-full bg-primary" />} */}
-          </div>
-        </div>
-      </a>
-    );
-  }
-  return (
-    <div
-      onKeyDown={() => null}
-      role="button"
-      tabIndex={0}
-      onClick={async () => {
-        if (userAction) {
-          await registerUserAction.mutateAsync(userAction);
-        }
-      }}
-      className="relative my-1.5 flex h-[5.5rem] w-full cursor-pointer items-center justify-between overflow-hidden rounded-md border border-dashed border-bunker-400 bg-bunker-700 py-2 pl-2 pr-6 shadow-xl duration-200 hover:bg-bunker-500"
-    >
-      <div className="mr-4 flex flex-row items-center">
-        <FontAwesomeIcon icon={icon} className="mx-2 w-16 text-4xl" />
-        {complete && (
-          <div className="absolute left-11 top-10 h-7 w-7 rounded-full bg-bunker-700">
-            <FontAwesomeIcon
-              icon={faCheckCircle}
-              className="absolute left-12 top-16 h-5 w-5 text-4xl text-primary"
-            />
-          </div>
-        )}
-        <div className="flex flex-col items-start">
-          <div className="mt-0.5 text-xl font-semibold">{text}</div>
-          <div className="mt-0.5 text-sm font-normal">{subText}</div>
-        </div>
-      </div>
-      <div className={`w-28 pr-4 text-right text-sm font-semibold ${complete && "text-primary"}`}>
-        {complete ? "Complete!" : `About ${time}`}
-      </div>
-      {complete && <div className="absolute bottom-0 left-0 h-1 w-full bg-primary" />}
-    </div>
-  );
-};
-
-const LearningItemSquare = ({
-  text,
-  subText,
-  complete,
-  icon,
-  time,
-  userAction,
-  link
-}: ItemProps): JSX.Element => {
-  const registerUserAction = useRegisterUserAction();
-  return (
-    <a
-      target={`${link?.includes("https") ? "_blank" : "_self"}`}
-      rel="noopener noreferrer"
-      className={`w-full ${complete && "opacity-30 duration-200 hover:opacity-100"}`}
-      href={link}
-    >
-      <div
-        className={`${
-          complete ? "bg-gradient-to-r from-primary-500/70 p-[0.07rem]" : ""
-        } w-full rounded-md`}
-      >
-        <div
-          onKeyDown={() => null}
-          role="button"
-          tabIndex={0}
-          onClick={async () => {
-            if (userAction && userAction !== "first_time_secrets_pushed") {
-              await registerUserAction.mutateAsync(userAction);
-            }
-          }}
-          className={`group relative flex w-full items-center justify-between overflow-hidden rounded-md border ${
-            complete
-              ? "cursor-default border-mineshaft-900 bg-gradient-to-r from-[#0e1f01] to-mineshaft-700"
-              : "cursor-pointer border-mineshaft-600 bg-mineshaft-800 shadow-xl hover:bg-mineshaft-700"
-          } text-mineshaft-100 duration-200`}
-        >
-          <div className="flex w-full flex-col items-center px-6 py-4">
-            <div className="flex w-full flex-row items-start justify-between">
-              <FontAwesomeIcon
-                icon={icon}
-                className="w-16 pt-2 text-5xl text-mineshaft-200 duration-100 group-hover:text-mineshaft-100"
-              />
-              {complete && (
-                <div className="absolute left-14 top-12 flex h-7 w-7 items-center justify-center rounded-full bg-bunker-500 p-2 group-hover:bg-mineshaft-700">
-                  <FontAwesomeIcon icon={faCheckCircle} className="h-5 w-5 text-4xl text-primary" />
-                </div>
-              )}
-              <div
-                className={`text-right text-sm font-normal text-mineshaft-300 ${
-                  complete ? "font-semibold text-primary" : ""
-                }`}
-              >
-                {complete ? "Complete!" : `About ${time}`}
-              </div>
-            </div>
-            <div className="flex w-full flex-col items-start justify-start pt-4">
-              <div className="mt-0.5 text-lg font-medium">{text}</div>
-              <div className="text-sm font-normal text-mineshaft-300">{subText}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </a>
-  );
-};
 
 const formSchema = yup.object({
   name: yup
@@ -483,12 +75,6 @@ const OrganizationPage = withPermission(
 
     const addUsersToProject = useAddUserToWsNonE2EE();
 
-    const { data: updateClosed } = useGetUserAction("april_13_2024_db_update_closed");
-    const registerUserAction = useRegisterUserAction();
-    const closeUpdate = async () => {
-      await registerUserAction.mutateAsync("april_13_2024_db_update_closed");
-    };
-
     const { popUp, handlePopUpOpen, handlePopUpClose, handlePopUpToggle } = usePopUp([
       "addNewWs",
       "upgradePlan"
@@ -502,10 +88,10 @@ const OrganizationPage = withPermission(
       resolver: yupResolver(formSchema)
     });
 
-    const [hasUserClickedSlack, setHasUserClickedSlack] = useState(false);
-    const [hasUserClickedIntro, setHasUserClickedIntro] = useState(false);
-    const [hasUserPushedSecrets, setHasUserPushedSecrets] = useState(false);
-    const [usersInOrg, setUsersInOrg] = useState(false);
+    const [, setHasUserClickedSlack] = useState(false);
+    const [, setHasUserClickedIntro] = useState(false);
+    const [, setHasUserPushedSecrets] = useState(false);
+    const [, setUsersInOrg] = useState(false);
     const [searchFilter, setSearchFilter] = useState("");
     const createWs = useCreateWorkspace();
     const { user } = useUser();
@@ -594,31 +180,6 @@ const OrganizationPage = withPermission(
           </div>
         )}
         <div className="mb-4 flex flex-col items-start justify-start px-6 py-6 pb-0 text-3xl">
-        {(window.location.origin.includes("https://app.infisical.com") || window.location.origin.includes("http://localhost:8080")) && (
-        <div
-            className={`${
-              !updateClosed ? "block" : "hidden"
-            } mb-4 flex w-full flex-row items-center rounded-md border border-primary-600 bg-primary/10 p-2 text-base text-white`}
-          >
-            <FontAwesomeIcon icon={faWarning} className="p-6 text-4xl text-primary" />
-            <div className="text-sm">
-              <span className="text-lg font-semibold">Scheduled maintenance on May 11th 2024 </span>{" "}
-              <br />
-              Infisical will undergo scheduled maintenance for approximately 2 hour on Saturday, May 11th, 11am EST. During these hours, read
-              operations to Infisical will continue to function normally but no resources will be editable.
-              No action is required on your end — your applications will continue to fetch secrets.
-              <br />
-            </div>
-            <button
-              type="button"
-              onClick={() => closeUpdate()}
-              aria-label="close"
-              className="flex h-full items-start text-mineshaft-100 duration-200 hover:text-red-400"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-          </div>)}
-
           <p className="mr-4 font-semibold text-white">Projects</p>
           <div className="mt-6 flex w-full flex-row">
             <Input

@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import { faGithub, faGitlab, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -18,20 +17,6 @@ export default function InitialSignupStep({
       <h1 className="mb-8 bg-gradient-to-b from-white to-bunker-200 bg-clip-text text-center text-xl font-medium text-transparent">
         {t("signup.initial-title")}
       </h1>
-      {/*<div className="w-1/4 min-w-[20rem] rounded-md lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="solid"
-          onClick={() => {
-            window.open("/api/v1/sso/redirect/google");
-            window.close();
-          }}
-          leftIcon={<FontAwesomeIcon icon={faGoogle} className="mr-2" />}
-          className="mx-0 h-12 w-full"
-        >
-          {t("signup.continue-with-google")}
-        </Button>
-      </div>*/}
       <div className="mt-4 w-1/4 min-w-[20rem] rounded-md text-center lg:w-1/6">
         <Button
           colorSchema="primary"

@@ -1,10 +1,8 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { UpgradePlanModal } from "@app/components/v2";
-import { useSubscription } from "@app/context";
 import { EventType, UserAgentType } from "@app/hooks/api/auditLogs/enums";
 import { usePopUp } from "@app/hooks/usePopUp";
 
@@ -13,10 +11,9 @@ import { LogsTable } from "./LogsTable";
 import { AuditLogFilterFormData, auditLogFilterFormSchema } from "./types";
 
 export const LogsSection = () => {
-  const { subscription } = useSubscription();
   const router = useRouter();
 
-  const { popUp, handlePopUpOpen, handlePopUpToggle } = usePopUp(["upgradePlan"] as const);
+  const { popUp, handlePopUpToggle } = usePopUp(["upgradePlan"] as const);
 
   const { control, reset, watch } = useForm<AuditLogFilterFormData>({
     resolver: yupResolver(auditLogFilterFormSchema),

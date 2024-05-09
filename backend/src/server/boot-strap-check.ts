@@ -16,7 +16,7 @@ const bootstrapCb = async () => {
   const appCfg = getConfig();
   const serverCfg = await getServerCfg();
   if (!serverCfg.initialized) {
-    console.info(`Welcome to Infisical
+    console.info(`Welcome to TDA Infisical
 
 Create your Infisical administrator account at:
 http://localhost:${appCfg.PORT}/admin/signup

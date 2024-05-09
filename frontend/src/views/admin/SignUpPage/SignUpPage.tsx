@@ -48,7 +48,7 @@ export const SignUpPage = () => {
   } = useForm<TFormSchema>({
     resolver: zodResolver(formSchema)
   });
-  
+
   const [step, setStep] = useState(SignupSteps.DetailsForm);
 
   const { config } = useServerConfig();
@@ -138,7 +138,7 @@ export const SignUpPage = () => {
           >
             <div className="flex flex-col items-center space-y-2 text-center">
               <img src="/images/gradientLogo.svg" height={90} width={120} alt="Infisical logo" />
-              <div className="pt-4 text-4xl">Welcome to Infisical</div>
+              <div className="pt-4 text-4xl">Welcome to TDA Infisical</div>
               <div className="pb-4 text-bunker-300">Create your first Super Admin Account</div>
             </div>
             <form onSubmit={handleSubmit(handleFormSubmit)}>

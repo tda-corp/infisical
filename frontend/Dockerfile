@@ -8,11 +8,11 @@ FROM node:16-alpine AS deps
 # RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy over dependency files 
+# Copy over dependency files
 COPY package.json package-lock.json next.config.js ./
 
 # Install dependencies
-RUN npm ci --only-production --ignore-scripts
+RUN npm install --only-production --ignore-scripts
 
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder
@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
-# Copy all files 
+# Copy all files
 COPY . .
 
 ENV NODE_ENV production
@@ -56,7 +56,7 @@ ARG SAML_ORG_SLUG
 ENV NEXT_PUBLIC_SAML_ORG_SLUG=$SAML_ORG_SLUG \
     BAKED_NEXT_PUBLIC_SAML_ORG_SLUG=$SAML_ORG_SLUG
 ARG NEXT_INFISICAL_PLATFORM_VERSION
-ENV NEXT_PUBLIC_INFISICAL_PLATFORM_VERSION=$NEXT_INFISICAL_PLATFORM_VERSION 
+ENV NEXT_PUBLIC_INFISICAL_PLATFORM_VERSION=$NEXT_INFISICAL_PLATFORM_VERSION
 
 COPY --chown=nextjs:nodejs --chmod=555 scripts ./scripts
 COPY --from=builder /app/public ./public
@@ -72,7 +72,7 @@ EXPOSE 3000
 ENV PORT 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-HEALTHCHECK --interval=10s --timeout=3s --start-period=10s \  
+HEALTHCHECK --interval=10s --timeout=3s --start-period=10s \
     CMD node scripts/healthcheck.js
 
 

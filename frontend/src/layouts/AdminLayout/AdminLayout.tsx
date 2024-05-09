@@ -8,20 +8,13 @@
 // @ts-nocheck
 
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { faGithub, faSlack } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowLeft,
-  faArrowUpRightFromSquare,
-  faBook,
-  faEnvelope,
-  faInfinity,
   faInfo,
   faMobile,
-  faPlus,
-  faQuestion
+  faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
@@ -29,58 +22,24 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@app/components/v2";
 import { useOrganization, useSubscription, useUser } from "@app/context";
 import {
-  useGetOrgTrialUrl,
-  useGetUserAction,
-  useLogoutUser,
-  useRegisterUserAction
+  useLogoutUser
 } from "@app/hooks/api";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-const supportOptions = [
-  [
-    <FontAwesomeIcon key={1} className="pr-4 text-sm" icon={faSlack} />,
-    "Support Forum",
-    "https://infisical.com/slack"
-  ],
-  [
-    <FontAwesomeIcon key={2} className="pr-4 text-sm" icon={faBook} />,
-    "Read Docs",
-    "https://infisical.com/docs/documentation/getting-started/introduction"
-  ],
-  [
-    <FontAwesomeIcon key={3} className="pr-4 text-sm" icon={faGithub} />,
-    "GitHub Issues",
-    "https://github.com/Infisical/infisical/issues"
-  ],
-  [
-    <FontAwesomeIcon key={4} className="pr-4 text-sm" icon={faEnvelope} />,
-    "Email Support",
-    "mailto:support@infisical.com"
-  ]
-];
-
 export const AdminLayout = ({ children }: LayoutProps) => {
   const router = useRouter();
-  const { mutateAsync } = useGetOrgTrialUrl();
 
   // eslint-disable-next-line prefer-const
   const { currentOrg } = useOrganization();
 
   const { user } = useUser();
   const { subscription } = useSubscription();
-  const { data: updateClosed } = useGetUserAction("december_update_closed");
   const infisicalPlatformVersion = process.env.NEXT_PUBLIC_INFISICAL_PLATFORM_VERSION;
 
   const { t } = useTranslation();
-
-  const registerUserAction = useRegisterUserAction();
-
-  const closeUpdate = async () => {
-    await registerUserAction.mutateAsync("december_update_closed");
-  };
 
   const logout = useLogoutUser();
   const logOutUser = async () => {

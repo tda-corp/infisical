@@ -1,71 +1,94 @@
-version: "3"
+version: "3.9"
 
 services:
+  nginx:
+    container_name: infisical-nginx
+    image: nginx
+    restart: always
+    ports:
+      - 8082:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: infisical
+      POSTGRES_USER: infisical
+      POSTGRES_DB: infisical
+
+  redis:
+    image: redis
+    container_name: infisical-redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379
+    volumes:
+      - redis_data:/data
+
   db-migration:
     container_name: infisical-db-migration
     depends_on:
-      db:
-        condition: service_healthy
-    image: infisical/infisical:latest-postgres
+      - db
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     env_file: .env
+    environment:
+      - DB_CONNECTION_URI=postgres://infisical:infisical@db/infisical?sslmode=disable
     command: npm run migration:latest
-    pull_policy: always
-    networks:
-      - infisical
+    volumes:
+      - ./backend/src:/app/src
 
   backend:
-    container_name: infisical-backend
-    restart: unless-stopped
+    container_name: infisical-api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_started
       db-migration:
         condition: service_completed_successfully
-    image: infisical/infisical:latest-postgres
-    pull_policy: always
-    env_file: .env
+    env_file:
+      - .env
     ports:
-      - 80:8080
+      - 4000
     environment:
       - NODE_ENV=production
-    networks:
-      - infisical
+      - DB_CONNECTION_URI=postgres://infisical:infisical@db/infisical?sslmode=disable
+      - TELEMETRY_ENABLED=true
+    volumes:
+      - ./backend/src:/app/src
 
-  redis:
-    image: redis
-    container_name: infisical-dev-redis
+  frontend:
+    container_name: infisical-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/src:/app/src/ # mounted whole src to avoid missing reload on new files
+      - ./frontend/public:/app/public
     env_file: .env
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - 6379:6379
-    networks:
-      - infisical
-    volumes:
-      - redis_data:/data
-
-  db:
-    container_name: infisical-db
-    image: postgres:14-alpine
-    restart: always
-    env_file: .env
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    networks:
-      - infisical
-    healthcheck:
-      test: "pg_isready --username=${POSTGRES_USER} && psql --username=${POSTGRES_USER} --list"
-      interval: 5s
-      timeout: 10s
-      retries: 10
+      - NEXT_PUBLIC_ENV=production
+      - INFISICAL_TELEMETRY_ENABLED=true
 
 volumes:
-  pg_data:
+  postgres-data:
     driver: local
   redis_data:
     driver: local
-
-networks:
-  infisical:
