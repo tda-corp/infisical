@@ -27,12 +27,6 @@ export const LogsSection = () => {
     }
   });
 
-  useEffect(() => {
-    if (subscription && !subscription.auditLogs) {
-      handlePopUpOpen("upgradePlan");
-    }
-  }, [subscription]);
-
   const eventType = watch("eventType") as EventType | undefined;
   const userAgentType = watch("userAgentType") as UserAgentType | undefined;
   const actor = watch("actor");

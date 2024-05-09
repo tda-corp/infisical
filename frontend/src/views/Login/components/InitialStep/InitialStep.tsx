@@ -123,9 +123,9 @@ export const InitialStep = ({ setStep, email, setEmail, password, setPassword }:
       className="mx-auto flex w-full flex-col items-center justify-center"
     >
       <h1 className="mb-8 bg-gradient-to-b from-white to-bunker-200 bg-clip-text text-center text-xl font-medium text-transparent">
-        Login to Infisical
+        Login to TDA Infisical
       </h1>
-      <div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
+      {/*<div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
         <Button
           colorSchema="primary"
           variant="outline_bg"
@@ -143,75 +143,11 @@ export const InitialStep = ({ setStep, email, setEmail, password, setPassword }:
           {t("login.continue-with-google")}
         </Button>
       </div>
-      <div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            const callbackPort = queryParams.get("callback_port");
-
-            window.open(
-              `/api/v1/sso/redirect/github${callbackPort ? `?callback_port=${callbackPort}` : ""}`
-            );
-
-            window.close();
-          }}
-          leftIcon={<FontAwesomeIcon icon={faGithub} className="mr-2" />}
-          className="mx-0 h-10 w-full"
-        >
-          Continue with GitHub
-        </Button>
-      </div>
-      <div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            const callbackPort = queryParams.get("callback_port");
-
-            window.open(
-              `/api/v1/sso/redirect/gitlab${callbackPort ? `?callback_port=${callbackPort}` : ""}`
-            );
-
-            window.close();
-          }}
-          leftIcon={<FontAwesomeIcon icon={faGitlab} className="mr-2" />}
-          className="mx-0 h-10 w-full"
-        >
-          Continue with GitLab
-        </Button>
-      </div>
-      <div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            setStep(2);
-          }}
-          leftIcon={<FontAwesomeIcon icon={faLock} className="mr-2" />}
-          className="mx-0 h-10 w-full"
-        >
-          Continue with SAML
-        </Button>
-      </div>
-      <div className="mt-2 w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            router.push("/login/ldap");
-          }}
-          leftIcon={<FontAwesomeIcon icon={faLock} className="mr-2" />}
-          className="mx-0 h-10 w-full"
-        >
-          Continue with LDAP
-        </Button>
-      </div>
       <div className="my-4 flex w-1/4 min-w-[20rem] flex-row items-center py-2 lg:w-1/6">
         <div className="w-full border-t border-mineshaft-400/60" />
         <span className="mx-2 text-xs text-mineshaft-200">or</span>
         <div className="w-full border-t border-mineshaft-400/60" />
-      </div>
+      </div>*/}
       <div className="w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
         <Input
           value={email}

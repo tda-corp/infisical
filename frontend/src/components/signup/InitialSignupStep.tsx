@@ -18,7 +18,7 @@ export default function InitialSignupStep({
       <h1 className="mb-8 bg-gradient-to-b from-white to-bunker-200 bg-clip-text text-center text-xl font-medium text-transparent">
         {t("signup.initial-title")}
       </h1>
-      <div className="w-1/4 min-w-[20rem] rounded-md lg:w-1/6">
+      {/*<div className="w-1/4 min-w-[20rem] rounded-md lg:w-1/6">
         <Button
           colorSchema="primary"
           variant="solid"
@@ -31,35 +31,7 @@ export default function InitialSignupStep({
         >
           {t("signup.continue-with-google")}
         </Button>
-      </div>
-      <div className="mt-4 w-1/4 min-w-[20rem] rounded-md lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            window.open("/api/v1/sso/redirect/github");
-            window.close();
-          }}
-          leftIcon={<FontAwesomeIcon icon={faGithub} className="mr-2" />}
-          className="mx-0 h-12 w-full"
-        >
-          Continue with GitHub
-        </Button>
-      </div>
-      <div className="mt-4 w-1/4 min-w-[20rem] rounded-md lg:w-1/6">
-        <Button
-          colorSchema="primary"
-          variant="outline_bg"
-          onClick={() => {
-            window.open("/api/v1/sso/redirect/gitlab");
-            window.close();
-          }}
-          leftIcon={<FontAwesomeIcon icon={faGitlab} className="mr-2" />}
-          className="mx-0 h-12 w-full"
-        >
-          Continue with GitLab
-        </Button>
-      </div>
+      </div>*/}
       <div className="mt-4 w-1/4 min-w-[20rem] rounded-md text-center lg:w-1/6">
         <Button
           colorSchema="primary"

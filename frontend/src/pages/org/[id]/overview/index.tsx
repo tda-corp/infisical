@@ -480,7 +480,7 @@ const OrganizationPage = withPermission(
     const { currentOrg } = useOrganization();
     const routerOrgId = String(router.query.id);
     const orgWorkspaces = workspaces?.filter((workspace) => workspace.orgId === routerOrgId) || [];
-    
+
     const addUsersToProject = useAddUserToWsNonE2EE();
 
     const { data: updateClosed } = useGetUserAction("april_13_2024_db_update_closed");
@@ -605,7 +605,7 @@ const OrganizationPage = withPermission(
               <span className="text-lg font-semibold">Scheduled maintenance on May 11th 2024 </span>{" "}
               <br />
               Infisical will undergo scheduled maintenance for approximately 2 hour on Saturday, May 11th, 11am EST. During these hours, read
-              operations to Infisical will continue to function normally but no resources will be editable. 
+              operations to Infisical will continue to function normally but no resources will be editable.
               No action is required on your end — your applications will continue to fetch secrets.
               <br />
             </div>
@@ -618,7 +618,7 @@ const OrganizationPage = withPermission(
               <FontAwesomeIcon icon={faXmark} />
             </button>
           </div>)}
-          
+
           <p className="mr-4 font-semibold text-white">Projects</p>
           <div className="mt-6 flex w-full flex-row">
             <Input
@@ -711,132 +711,7 @@ const OrganizationPage = withPermission(
             </div>
           )}
         </div>
-        <div className="mb-4 flex flex-col items-start justify-start px-6 py-6 pb-6 text-3xl">
-          <p className="mr-4 font-semibold text-white">Explore Infisical</p>
-          <div className="mt-4 grid w-full grid-cols-3 gap-4">
-            {features.map((feature) => (
-              <div
-                key={feature._id}
-                className="flex h-44 w-full flex-col justify-between rounded-md border border-mineshaft-600 bg-mineshaft-800 p-4"
-              >
-                <div className="mt-0 text-lg text-mineshaft-100">{feature.name}</div>
-                <div className="mb-4 mt-2 text-[15px] font-light text-mineshaft-300">
-                  {feature.description}
-                </div>
-                <div className="flex w-full items-center">
-                  <div className="text-[15px] font-light text-mineshaft-300">
-                    Setup time: 20 min
-                  </div>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group ml-auto w-max cursor-default rounded-full border border-mineshaft-600 bg-mineshaft-900 py-2 px-4 text-sm text-mineshaft-300 transition-all hover:border-primary-500/80 hover:bg-primary-800/20 hover:text-mineshaft-200"
-                    href={feature.link}
-                  >
-                    Learn more{" "}
-                    <FontAwesomeIcon
-                      icon={faArrowRight}
-                      className="pl-1.5 pr-0.5 duration-200 group-hover:pl-2 group-hover:pr-0"
-                    />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        {!(
-          new Date().getTime() - new Date(user?.createdAt).getTime() <
-          30 * 24 * 60 * 60 * 1000
-        ) && (
-          <div className="mb-4 flex flex-col items-start justify-start px-6 pb-0 text-3xl">
-            <p className="mr-4 mb-4 font-semibold text-white">Onboarding Guide</p>
-            <div className="mb-3 grid w-full grid-cols-1 gap-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              <LearningItemSquare
-                text="Watch Infisical demo"
-                subText="Set up Infisical in 3 min."
-                complete={hasUserClickedIntro}
-                icon={faHandPeace}
-                time="3 min"
-                userAction="intro_cta_clicked"
-                link="https://www.youtube.com/watch?v=PK23097-25I"
-              />
-              {orgWorkspaces.length !== 0 && (
-                <>
-                  <LearningItemSquare
-                    text="Add your secrets"
-                    subText="Drop a .env file or type your secrets."
-                    complete={hasUserPushedSecrets}
-                    icon={faPlus}
-                    time="1 min"
-                    userAction="first_time_secrets_pushed"
-                    link={`/project/${orgWorkspaces[0]?.id}/secrets/overview`}
-                  />
-                  <LearningItemSquare
-                    text="Invite your teammates"
-                    subText="Infisical is better used as a team."
-                    complete={usersInOrg}
-                    icon={faUserPlus}
-                    time="2 min"
-                    link={`/org/${router.query.id}/members?action=invite`}
-                  />
-                </>
-              )}
-              <div className="block xl:hidden 2xl:block">
-                <LearningItemSquare
-                  text="Join Infisical Slack"
-                  subText="Have any questions? Ask us!"
-                  complete={hasUserClickedSlack}
-                  icon={faSlack}
-                  time="1 min"
-                  userAction="slack_cta_clicked"
-                  link="https://infisical.com/slack"
-                />
-              </div>
-            </div>
-            {orgWorkspaces.length !== 0 && (
-              <div className="group relative mb-3 flex h-full w-full cursor-default flex-col items-center justify-between overflow-hidden rounded-md border border-mineshaft-600 bg-mineshaft-800 pl-2 pr-2 pt-4 pb-2 text-mineshaft-100 shadow-xl duration-200">
-                <div className="mb-4 flex w-full flex-row items-center pr-4">
-                  <div className="mr-4 flex w-full flex-row items-center">
-                    <FontAwesomeIcon icon={faNetworkWired} className="mx-2 w-16 text-4xl" />
-                    {false && (
-                      <div className="absolute left-12 top-10 flex h-7 w-7 items-center justify-center rounded-full bg-bunker-500 p-2 group-hover:bg-mineshaft-700">
-                        <FontAwesomeIcon
-                          icon={faCheckCircle}
-                          className="h-5 w-5 text-4xl text-green"
-                        />
-                      </div>
-                    )}
-                    <div className="flex flex-col items-start pl-0.5">
-                      <div className="mt-0.5 text-xl font-semibold">Inject secrets locally</div>
-                      <div className="text-sm font-normal">
-                        Replace .env files with a more secure and efficient alternative.
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={`w-28 pr-4 text-right text-sm font-semibold ${
-                      false && "text-green"
-                    }`}
-                  >
-                    About 2 min
-                  </div>
-                </div>
-                <TabsObject />
-                {false && <div className="absolute bottom-0 left-0 h-1 w-full bg-green" />}
-              </div>
-            )}
-            {orgWorkspaces.length !== 0 && (
-              <LearningItem
-                text="Integrate Infisical with your infrastructure"
-                subText="Connect Infisical to various 3rd party services and platforms."
-                complete={false}
-                icon={faPlug}
-                time="15 min"
-                link="https://infisical.com/docs/integrations/overview"
-              />
-            )}
-          </div>
-        )}
+
         <Modal
           isOpen={popUp.addNewWs.isOpen}
           onOpenChange={(isModalOpen) => {
