@@ -8,7 +8,6 @@ import { createNotification } from "@app/components/notifications";
 import attemptCliLogin from "@app/components/utilities/attemptCliLogin";
 import attemptLogin from "@app/components/utilities/attemptLogin";
 import { Button, Input } from "@app/components/v2";
-import { useServerConfig } from "@app/context";
 
 import { navigateUserToSelectOrg } from "../../Login.utils";
 
@@ -26,7 +25,6 @@ export const InitialStep = ({ setStep, email, setEmail, password, setPassword }:
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
-  const { config } = useServerConfig();
   const queryParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
@@ -119,7 +117,8 @@ export const InitialStep = ({ setStep, email, setEmail, password, setPassword }:
       onSubmit={handleLogin}
       className="mx-auto flex w-full flex-col items-center justify-center"
     >
-      <h1 className="mb-8 bg-gradient-to-b from-white to-bunker-200 bg-clip-text text-center text-xl font-medium text-transparent">
+      <h1
+        className="mb-8 bg-gradient-to-b from-white to-bunker-200 bg-clip-text text-center text-xl font-medium text-transparent">
         Login to TDA Infisical
       </h1>
       <div className="w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
@@ -159,21 +158,12 @@ export const InitialStep = ({ setStep, email, setEmail, password, setPassword }:
           Continue with Email{" "}
         </Button>
       </div>
-      {!isLoading && loginError && <Error text={t("login.error-login") ?? ""} />}
-      {config.allowSignUp ? (
-        <div className="mt-6 flex flex-row text-sm text-bunker-400">
-          <Link href="/signup">
-            <span className="cursor-pointer duration-200 hover:text-bunker-200 hover:underline hover:decoration-primary-700 hover:underline-offset-4">
-              Don&apos;t have an account yet? {t("login.create-account")}
-            </span>
-          </Link>
-        </div>
-      ) : (
-        <div className="mt-4" />
-      )}
+      {!isLoading && loginError && <Error text={t("login.error-login") ?? ""}/>}
+      <div className="mt-4"/>
       <div className="mt-2 flex flex-row text-sm text-bunker-400">
         <Link href="/verify-email">
-          <span className="cursor-pointer duration-200 hover:text-bunker-200 hover:underline hover:decoration-primary-700 hover:underline-offset-4">
+          <span
+            className="cursor-pointer duration-200 hover:text-bunker-200 hover:underline hover:decoration-primary-700 hover:underline-offset-4">
             Forgot password? Recover your account
           </span>
         </Link>

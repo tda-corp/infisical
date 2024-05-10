@@ -31,7 +31,7 @@ export default function SignUp() {
   const [step, setStep] = useState(1);
   const router = useRouter();
   const { data: serverDetails } = useFetchServerStatus();
-  const [isSignupWithEmail, setIsSignupWithEmail] = useState(false);
+  const [isSignupWithEmail] = useState(false);
   const [isCodeInputCheckLoading, setIsCodeInputCheckLoading] = useState(false);
   const { t } = useTranslation();
   const { mutateAsync } = useVerifySignupEmailVerificationCode();
@@ -101,7 +101,7 @@ export default function SignUp() {
     }
 
     if (!isSignupWithEmail && registerStep === 1) {
-      return <InitialSignupStep setIsSignupWithEmail={setIsSignupWithEmail} />;
+      return <InitialSignupStep />;
     }
 
     if (registerStep === 2) {

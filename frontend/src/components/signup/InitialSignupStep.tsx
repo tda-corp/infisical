@@ -5,11 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Button } from "../v2";
 
-export default function InitialSignupStep({
-  setIsSignupWithEmail
-}: {
-  setIsSignupWithEmail: (value: boolean) => void;
-}) {
+export default function InitialSignupStep() {
   const { t } = useTranslation();
 
   return (
@@ -21,11 +17,9 @@ export default function InitialSignupStep({
         <Button
           colorSchema="primary"
           variant="outline_bg"
-          onClick={() => {
-            setIsSignupWithEmail(true);
-          }}
           leftIcon={<FontAwesomeIcon icon={faEnvelope} className="mr-2" />}
           className="mx-0 h-12 w-full"
+          isDisabled
         >
           Continue with Email
         </Button>
