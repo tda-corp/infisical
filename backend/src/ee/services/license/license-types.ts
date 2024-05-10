@@ -29,7 +29,7 @@ export type TFeatureSet = {
   workspaceLimit: null;
   workspacesUsed: 0;
   dynamicSecret: true;
-  memberLimit: 999999;
+  memberLimit: null;
   membersUsed: 0;
   environmentLimit: null;
   environmentsUsed: 0;
@@ -47,7 +47,7 @@ export type TFeatureSet = {
   scim: true;
   ldap: true;
   groups: true;
-  status: null;
+  status: "active";
   trial_end: false;
   has_used_trial: false;
   secretApproval: true;
