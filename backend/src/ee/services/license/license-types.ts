@@ -26,12 +26,12 @@ export type TFeatureSet = {
   _id: null;
   slug: "enterprise";
   tier: -1;
-  workspaceLimit: false;
+  workspaceLimit: null;
   workspacesUsed: 0;
   dynamicSecret: true;
   memberLimit: 999999;
   membersUsed: 0;
-  environmentLimit: false;
+  environmentLimit: null;
   environmentsUsed: 0;
   secretVersioning: true;
   pitRecovery: true;
